@@ -2,6 +2,10 @@
   "name": "finalexam",
   "app_id": "",
   "type": "ionic-angular",
+  "proxies": [{
+    "path": "/api",
+    "proxyUrl": "http://ec2-52-15-39-153.us-east-2.compute.amazonaws.com:3000/api"
+  }],
   "integrations": {
     "cordova": {}
   }
