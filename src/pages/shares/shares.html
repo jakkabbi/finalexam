@@ -1,0 +1,78 @@
+<app-loading [condition]="isLoading"></app-loading>
+
+<app-toast [message]="toast.message"></app-toast>
+
+<div class="card mb-3" *ngIf="!isLoading">
+  <h4 class="card-header">{{auth.currentUser.username}}'s Investment Portfolio</h4>
+  <div class="card-body">
+    <table class="table table-bordered">
+      <thead class="thead-light">
+        <ng-container *ngIf="!editing">
+          <tr>
+            <th scope="col">Ticker</th>
+            <th scope="col">Shares</th>
+            <th scope="col">Costs</th>
+            <th scope="col">Total Cost</th>
+            <th scope="col">Current Value</th>
+            <th scope="col">Current Total</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </ng-container>
+        <ng-container *ngIf="editing">
+          <tr>
+            <th scope="col">Ticker</th>
+            <th scope="col">Cost</th>
+            <th scope="col">Shares</th>
+            <th scope="col">Action</th>
+          </tr>
+        </ng-container>
+      </thead>
+      <tbody *ngIf="shares.length === 0">
+        <tr>
+          <td colspan="4">You have no shares currently.</td>
+        </tr>
+      </tbody>
+      <tbody *ngIf="!editing">
+          <tr *ngFor="let share of shares; let i = index">
+            <td>{{share.tickerName}}</td>
+            <td>{{share.shareNum}}</td>
+            <td>${{share.cost | number:0.00}}</td>
+            <td>${{share.shareNum*share.cost | number:0.00}}</td>
+            <td>${{share.currentPrice | number:0.00}}</td>
+            <td>${{share.currentPrice * share.shareNum | number:0.00}}</td>
+            <td colspan="2">
+              <button class="btn btn-sm btn-primary" (click)="enableEditing(share)"><i class="fa fa-pencil"></i> Update</button>
+              <button class="btn btn-sm btn-danger" (click)="deleteShare(share)"><i class="fa fa-trash"></i> Delete</button>
+            </td>
+          </tr>
+      </tbody>
+      <tbody *ngIf="editing">
+          <tr>
+                <td>{{share.tickerName}}</td>
+                <td>${{share.cost}}</td>
+                <td><input class="form-control" type="number" name="shareNum" [(ngModel)]="share.shareNum" placeholder="Number of shares" min="0" required></td>
+                <td><button class="btn btn-sm btn-primary mr-2" (click)="editShare(share)"><i class="fa fa-floppy-o"></i> Save</button></td>
+          </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card" *ngIf="!editing">
+  <h4 class="card-header">Add new investment</h4>
+  <div class="card-body">
+    <form class="form-inline" [formGroup]="addShareForm" (ngSubmit)="addShare()">
+      <input class="form-control mr-2" type="text" name="tickerName" formControlName="tickerName" text='' placeholder="Ticker Name">
+      <input class="form-control mr-2" type="number" name="shareNum" formControlName="shareNum" text='' placeholder="Number of shares">
+      <input class="form-control mr-2" type="number" name="cost" formControlName="cost" text='' placeholder="Cost per share">
+      <button class="btn btn-primary" type="input" [disabled]="!addShareForm.valid"><i class="fa fa-floppy-o"></i> Add Purchase</button>
+    </form>
+  </div>
+</div>
+
+<div class="card" *ngIf="editing">
+  <h4 class="card-header">Cancel Editing</h4>
+  <div class="card-body">
+      <td colspan="4"> <button class="btn btn-sm btn-warning" (click)="cancelEditing()"><i class="fa fa-times"></i> Cancel</button></td>
+  </div>
+</div>

@@ -1,0 +1,9 @@
+<app-loading [condition]="isLoading"></app-loading>
+
+<div class="card mb-3" *ngIf="!isLoading">
+  <h4 class="card-header">{{auth.currentUser.username}}'s Portfolio Chart</h4>
+  <div class="card-body" (oninit)="drawChart()">
+    <!-- <button class="btn btn-sm btn-primary" (click)="drawChart()"> Display chart</button> -->
+    <svg width="1000" height="750"></svg>
+  </div>
+</div>
